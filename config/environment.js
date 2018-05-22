@@ -4,20 +4,22 @@
 
 // Custom imports
 var config = require('../config/server/server');
-var messages = require('../config/locals/english');
+
 
 // Container for all the variables
 var environments = {};
 
 // Staging {default} environment
 environments.staging = {
-    'port': config.environment.dev.port,
+    'httpPort': config.environment.dev.httpPort,
+    'httpsPort': config.environment.dev.httpsPort,
     'envName': config.environment.dev.envName
 };
 
 // Production environment
 environments.production = {
-    'port': config.environment.prod.port,
+    'httpPort': config.environment.prod.httpPort,
+    'httpsPort': config.environment.prod.httpsPort,
     'envName': config.environment.prod.envName
 };
 
