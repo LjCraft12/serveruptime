@@ -1,5 +1,12 @@
 module.exports = {
-    server: {
-        port: 3000
+    environment: {
+        dev: {
+            port: 3000,
+            envName: 'staging'
+        },
+        prod: {
+            port: 5000,
+            envName: 'production'
+        }
     }
 };

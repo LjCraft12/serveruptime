@@ -9,7 +9,8 @@ const url = require('url');
 var StringDecoder = require('string_decoder').StringDecoder;
 
 const config = require('./config/server/server');
-const message = require('./config/locals/english')
+const message = require('./config/locals/english');
+const environment = require('./config/environment');
 
 // The server should respond to all request with a string
 var server = http.createServer(function (req, res) {
@@ -63,7 +64,8 @@ var server = http.createServer(function (req, res) {
             var payloadStr = JSON.stringify(payload);
 
             // Return a response
-            res.writeHead(statusCode)
+            res.setHeader('Content-Type', 'application/json');
+            res.writeHead(statusCode);
 
             // Send the response
             res.end(payloadStr);
@@ -75,8 +77,8 @@ var server = http.createServer(function (req, res) {
 });
 
 // Start the server, and have it listen on port xxx
-server.listen(config.server.port, function () {
-    console.log(message.server.translation_0 + config.server.port)
+server.listen(environment.port, function () {
+    console.log(message.server.translation_0 + environment.port + ' in the: ' + environment.envName + ' environment ')
 });
 
 // Define handlers
