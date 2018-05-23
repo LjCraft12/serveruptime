@@ -15,5 +15,13 @@ module.exports = {
         "translation_5": "Error updating file",
         "translation_6": "Error closing the file",
         "translation_7": "Error deleting the file"
+    },
+    handlers: {
+        "translation_0": " User already exist",
+        "translation_1": " Missing required fields"
+    },
+    user: {
+        "translation_0": " Could not create the user",
+        "translation_1": " Could not hash the password please try again"
     }
 };

@@ -4,14 +4,16 @@
 * */
 
 // Dependencies
-const http = require('http');
-const https = require('https');
-const url = require('url');
+var http = require('http');
+var https = require('https');
+var url = require('url');
 var StringDecoder = require('string_decoder').StringDecoder;
 var fs = require('fs');
 
-const message = require('./config/locals/english');
-const environment = require('./config/environment');
+var message = require('./config/locals/english');
+var environment = require('./lib/environment');
+var handlers = require('./lib/handlers');
+var helpers = require('./lib/helpers');
 
 // Instantiate the HTTP server
 var httpServer = http.createServer(function (req, res) {
@@ -65,7 +67,7 @@ var unifiedServer = function (req, res) {
         buffer += decoder.end();
 
         // Choose the handler this request should go to if one is not found use the notFound handler
-        var choosenHandler = typeof(router[trimmedPath]) !== 'undefined' ? router[trimmedPath] : handlers.notFound;
+        var chosenHandler = typeof(router[trimmedPath]) !== 'undefined' ? router[trimmedPath] : handlers.notFound;
 
         // Construct the data object to send the handler
         var data = {
@@ -73,11 +75,11 @@ var unifiedServer = function (req, res) {
             'queryStringObject': queryStr,
             'method': method,
             'headers': headers,
-            'payload': buffer
+            'payload': helpers.parseJsonToObject(buffer)
         };
 
         // Route the request to the handler specified in the router
-        choosenHandler(data, function (statusCode, payload) {
+        chosenHandler(data, function (statusCode, payload) {
             // Use the status code called back by the handler, or default to 200
             statusCode = typeof(statusCode) == 'number' ? statusCode : 200;
 
@@ -95,25 +97,13 @@ var unifiedServer = function (req, res) {
             res.end(payloadStr);
 
             // Log the requested path
-            console.log('Returning this response ', statusCode, payloadStr);
+            console.log('Returning this response ', statusCode);
         });
     });
 };
 
-// Define handlers
-var handlers = {};
-
-// Ping handler
-handlers.ping = function (data, callback) {
-    callback(200);
-};
-
-// Not found handler
-handlers.notFound = function (data, callback) {
-    callback(404)
-};
-
 // Define a request router
 var router = {
-    'ping': handlers.ping
+    'ping': handlers.ping,
+    'users': handlers.users
 };
